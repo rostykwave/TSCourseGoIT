@@ -1,19 +1,56 @@
-class House {
-  street: string;
+class Key {
+  private signature: number;
 
-  constructor(n: string) {
-    this.street = n;
+  constructor() {
+    this.signature = Math.random();
   }
 
-  showAddress(this: House, add: string): void {
-    console.log("Address: " + this.street + " " + add);
+  getSignature(): number {
+    return this.signature;
   }
 }
 
-const house = new House("Bandery");
+class Person {
+  constructor(private key: Key) {}
 
-// house.showAddress();
+  getKey(): Key {
+    return this.key;
+  }
+}
 
-const copyHouse = { showAddress: house.showAddress, street: "Konovaltsya" };
+abstract class House {
+  protected door = false;
+  private tenants: Person[] = [];
 
-copyHouse.showAddress("street");
+  constructor(protected key: Key) {}
+
+  comeIn(person: Person): void {
+    if (!this.door) {
+      throw new Error("Door is close");
+    }
+    this.tenants.push(person);
+    console.log("Person inside");
+  }
+  abstract openDoor(key: Key): boolean;
+}
+
+class MyHouse extends House {
+  openDoor(key: Key) {
+    if (key.getSignature() !== this.key.getSignature()) {
+      throw new Error("Key to another door");
+    }
+
+    return (this.door = true);
+  }
+}
+
+const key = new Key();
+// const key2 = new Key();
+
+// const house = new MyHouse(key2);
+const house = new MyHouse(key);
+const person = new Person(key);
+
+house.openDoor(person.getKey());
+
+house.comeIn(person);
