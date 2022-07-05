@@ -1,13 +1,19 @@
-// const button = document.querySelector("button");
-const input1 = document.getElementById("num1")! as HTMLInputElement;
-const input2 = document.getElementById("num2")! as HTMLInputElement;
+class House {
+  street: string;
 
-function add(num1: number, num2: number) {
-  return num1 + num2;
+  constructor(n: string) {
+    this.street = n;
+  }
+
+  showAddress(this: House, add: string): void {
+    console.log("Address: " + this.street + " " + add);
+  }
 }
 
-// console.log(add(7,5));
+const house = new House("Bandery");
 
-// button.addEventListener("click", function() {
-//   console.log(add(+input1.value, +input2.value));
-// });
+// house.showAddress();
+
+const copyHouse = { showAddress: house.showAddress, street: "Konovaltsya" };
+
+copyHouse.showAddress("street");
